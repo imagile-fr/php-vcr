@@ -56,6 +56,12 @@ class StreamHelper
             $request->setCurlOption(\CURLOPT_TIMEOUT, $http['timeout']);
         }
 
+        $ssl = self::getSslOptionsFromContext($context);
+
+        if (isset($ssl['verify_peer'])) {
+            $request->setCurlOption(\CURLOPT_SSL_VERIFYPEER, $ssl['verify_peer']);
+        }
+
         // TODO: protocol_version
 
         return $request;
@@ -79,5 +85,25 @@ class StreamHelper
         $options = stream_context_get_options($context);
 
         return !empty($options['http']) ? $options['http'] : [];
+    }
+
+    /**
+     * Returns SSL options from current stream context.
+     *
+     * @see http://php.net/manual/en/context.ssl.php
+     *
+     * @param resource|null $context
+     *
+     * @return array<string,mixed> SSL options
+     */
+    protected static function getSslOptionsFromContext($context): array
+    {
+        if (!$context) {
+            return [];
+        }
+
+        $options = stream_context_get_options($context);
+
+        return !empty($options['ssl']) ? $options['ssl'] : [];
     }
 }
