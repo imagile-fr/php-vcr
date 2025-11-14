@@ -60,6 +60,7 @@ class StreamHelper
 
         if (isset($ssl['verify_peer'])) {
             $request->setCurlOption(\CURLOPT_SSL_VERIFYPEER, $ssl['verify_peer']);
+            $request->setCurlOption(\CURLOPT_SSL_VERIFYHOST, $ssl['verify_peer']);
         }
 
         // TODO: protocol_version
